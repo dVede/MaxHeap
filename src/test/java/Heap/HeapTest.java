@@ -1,4 +1,4 @@
-package maxHeap;
+package Heap;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -8,15 +8,20 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
-public class MaxHeapTest {
+public class HeapTest {
 
-    private MaxHeap<Integer> maxHeap = new MaxHeap<>();
-    private MaxHeap<Integer> newHeap = new MaxHeap<>();
+    private Heap<Integer> maxHeap = new Heap<Integer>(MinMax.MAX);
+    private Heap<Integer> newHeap = new Heap<Integer>(MinMax.MAX);
 
-    private <T extends Comparable<T>> boolean sortCheck(@NotNull MaxHeap<T> heap) {
-        return IntStream.range(0, heap.size() / 2)
-                .noneMatch(i -> 2 * i + 1 < heap.size() && heap.get(i).compareTo(heap.get(2 * i + 1)) < 0
-                || 2 * i + 2 < heap.size() && heap.get(i).compareTo((heap.get(2 * i + 2))) < 0);
+    private <T extends Comparable<T>> boolean sortCheck(@NotNull Heap<T> heap) {
+        if (heap.minMax == MinMax.MAX)
+            return IntStream.range(0, heap.size() / 2)
+                    .noneMatch(i -> 2 * i + 1 < heap.size() && heap.get(i).compareTo(heap.get(2 * i + 1)) < 0
+                            || 2 * i + 2 < heap.size() && heap.get(i).compareTo((heap.get(2 * i + 2))) < 0);
+        else
+            return IntStream.range(0, heap.size() / 2)
+                .noneMatch(i -> 2 * i + 1 < heap.size() && heap.get(i).compareTo(heap.get(2 * i + 1)) > 0
+                        || 2 * i + 2 < heap.size() && heap.get(i).compareTo((heap.get(2 * i + 2))) > 0);
     }
 
     @Test
@@ -47,9 +52,9 @@ public class MaxHeapTest {
 
     @Test
     public void getIndexTestTest() {
-        assertEquals(56, maxHeap.getRightChildIndex(27));
-        assertEquals(53, maxHeap.getLeftChildIndex(26));
-        assertEquals(1638, maxHeap.getParentIndex(3278));
+        assertEquals(56, Heap.getRightChildIndex(27));
+        assertEquals(53, Heap.getLeftChildIndex(26));
+        assertEquals(1638, Heap.getParentIndex(3278));
     }
 
     @Test
@@ -242,6 +247,12 @@ public class MaxHeapTest {
         assertEquals(check, array);
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void sortedArrayNoSuchTest(){
+        ArrayList<Integer> array = new ArrayList<>();
+        maxHeap.sortedArray(array);
+    }
+
     @Test
     public void heapCreateTest(){
         maxHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14));
@@ -266,9 +277,48 @@ public class MaxHeapTest {
     }
 
     @Test
+    public void log2Test(){
+        assertEquals(4 , Heap.log2(16));
+        assertEquals(10 , Heap.log2(1025));
+        assertEquals(10 , Heap.log2(2047));
+    }
+
+    @Test
+    public void heapHeightTest(){
+        maxHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14, 17, 18));
+        assertEquals(3 , maxHeap.getHeight());
+        maxHeap.addAll(Arrays.asList(99, 195, 843, 429, 233, 254, 124, 164, 177, 181));
+        assertEquals(4 , maxHeap.getHeight());
+    }
+
+    @Test
+    public void mergeTest(){
+        maxHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14, 17, 18));
+        ArrayList<Integer> check = new ArrayList<>(Arrays.asList(38, 19, 18, 16, 15, 11, 10, 5, 4));
+        assertTrue(sortCheck(maxHeap.merge(check)));
+        assertEquals(16 ,maxHeap.merge(check).size());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void mergeNoSuchTest(){
+        maxHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14, 17, 18));
+        ArrayList<Integer> check = new ArrayList<>();
+        maxHeap.merge(check);
+    }
+
+    @Test
+    public void heapMinTest(){
+        Heap<Integer> minHeap = new Heap<Integer>(MinMax.MIN);
+        minHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14, 17, 18));
+        minHeap.add(1);
+        assertTrue(sortCheck(minHeap));
+        assertEquals((Integer) 1, minHeap.getMax());
+    }
+
+    @Test
     public void heapCreateTest2(){
         ArrayList<Integer> array = new ArrayList<>(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14));
-        maxHeap = new MaxHeap<>(array);
+        maxHeap = new Heap<Integer>(array, MinMax.MAX);
         assertTrue(sortCheck(maxHeap));
     }
 }
