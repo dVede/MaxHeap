@@ -159,17 +159,6 @@ public class HeapTest {
     }
 
     @Test
-    public void getMaxTest(){
-        assertNull(maxHeap.getMax());
-        IntStream.range(0, 49).forEach(i -> newHeap.add(2 * i * (int) Math.pow(-1, i)));
-        IntStream.range(0, 50).forEach(i -> maxHeap.add(2 * i * (int) Math.pow(-1, i)));
-        assertEquals(maxHeap.peek(),  maxHeap.getMax());
-        newHeap.getMax();
-        newHeap.getMax();
-        assertTrue(sortCheck(newHeap));
-    }
-
-    @Test
     public void printTest(){
         maxHeap.addAll(Arrays.asList(12, 11, 8, 14, 1));
         assertEquals("14 12 8 11 1 ", maxHeap.print());
@@ -217,9 +206,12 @@ public class HeapTest {
     @Test
     public void pollTest(){
         assertNull(maxHeap.poll());
-        maxHeap.addAll(Arrays.asList(12, 11, 8, 14, 1, 15, 7, 6));
-        assertEquals((Integer) 15, maxHeap.poll());
-        assertTrue(sortCheck(maxHeap));
+        IntStream.range(0, 49).forEach(i -> newHeap.add(2 * i * (int) Math.pow(-1, i)));
+        IntStream.range(0, 50).forEach(i -> maxHeap.add(2 * i * (int) Math.pow(-1, i)));
+        assertEquals(maxHeap.peek(),  maxHeap.poll());
+        newHeap.poll();
+        newHeap.poll();
+        assertTrue(sortCheck(newHeap));
     }
 
     @Test
@@ -256,7 +248,7 @@ public class HeapTest {
     @Test
     public void heapCreateTest(){
         maxHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14));
-        assertEquals(maxHeap.peek(),  maxHeap.getMax());
+        assertEquals(maxHeap.peek(),  maxHeap.poll());
         assertTrue(sortCheck(maxHeap));
     }
 
@@ -267,6 +259,11 @@ public class HeapTest {
         assertEquals((Integer) 18, maxHeap.get(9));
     }
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void getIndexOutTest(){
+        maxHeap.get(-1);
+    }
+
     @Test
     public void setTest(){
         maxHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14, 17, 18));
@@ -274,13 +271,13 @@ public class HeapTest {
         assertTrue(sortCheck(maxHeap));
         maxHeap.set(0, 1);
         assertTrue(sortCheck(maxHeap));
+        assertEquals((Integer) 83, maxHeap.set(0, 84));
     }
 
-    @Test
-    public void log2Test(){
-        assertEquals(4 , Heap.log2(16));
-        assertEquals(10 , Heap.log2(1025));
-        assertEquals(10 , Heap.log2(2047));
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void setIndexOutTest(){
+        maxHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14, 17, 18));
+        maxHeap.set(40, 33);
     }
 
     @Test
@@ -312,7 +309,7 @@ public class HeapTest {
         minHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14, 17, 18));
         minHeap.add(1);
         assertTrue(sortCheck(minHeap));
-        assertEquals((Integer) 1, minHeap.getMax());
+        assertEquals((Integer) 1, minHeap.poll());
     }
 
     @Test

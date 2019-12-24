@@ -25,7 +25,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         return (int) Math.floor(log2(heap.size() + 1));
     }
 
-    public static int log2(int x){
+    private static int log2(int x){
         return (int) (Math.log(x) / Math.log(2));
     }
 
@@ -51,13 +51,19 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
     }
 
     public T get(int index){
+        if (index < 0 || index >= this.size())
+            throw new IndexOutOfBoundsException();
         return heap.get(index);
     }
 
-    public void set(int index, T value){
+    public T set(int index, T value){
+        if (index < 0 || index >= this.size())
+            throw new IndexOutOfBoundsException();
+        T oldValue = this.get(index);
         heap.set(index, value);
         for (int i = heap.size() / 2; i >= 0; i--)
             sort(i);
+        return oldValue;
     }
 
     @Override
@@ -120,7 +126,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         swap(currentIndex, parentIndex);
         currentIndex = parentIndex;
         parentIndex = getParentIndex(currentIndex);
-    }
+        }
         return true;
     }
 
@@ -213,16 +219,6 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         heap.set(parentIndex, temp);
     }
 
-    public T getMax() {
-        if (!(heap.size() > 0))
-            return null;
-        T result = heap.get(0);
-        heap.set(0, heap.get(heap.size() - 1));
-        heap.remove(heap.size() - 1);
-        sort(0);
-        return result;
-    }
-
     private void sort(int currentIndex) {
         int maxIndex = currentIndex;
         int rightIndex, leftIndex;
@@ -252,7 +248,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         if (array.isEmpty())
             throw new NoSuchElementException();
         Heap<T> heap = new Heap<T>(array, this.minMax);
-        IntStream.range(0, array.size()).forEach(i -> array.set(i, heap.getMax()));
+        IntStream.range(0, array.size()).forEach(i -> array.set(i, heap.poll()));
     }
 
     public Heap<T> merge(ArrayList<T> array){

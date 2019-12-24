@@ -37,12 +37,12 @@ public class BMTest {
 
     @Benchmark
     public void testGetMaxHeap3(BenchMarkState state) {
-        state.small1.getMax();
+        state.small1.poll();
     }
 
     @Benchmark
     public void testGetMaxHeap50(BenchMarkState state) {
-        state.big1.getMax();
+        state.big1.poll();
     }
 
     @Benchmark
