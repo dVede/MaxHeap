@@ -12,8 +12,8 @@ import static Heap.Heap.getParentIndex;
 
 public class Gui extends JFrame {
 
-    public static final int WIDTH = 1000;
-    public static final int HEIGHT = 600;
+    private static final int WIDTH = 1000;
+    private static final int HEIGHT = 600;
 
     private ArrayList<Line> lines = new ArrayList<Line>();
     private Heap<Integer> heap = new Heap<Integer>();
@@ -42,10 +42,8 @@ public class Gui extends JFrame {
 
     public Gui() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int locationX = (screenSize.width - WIDTH - 37) / 2;
-        int locationY = (screenSize.height - HEIGHT) / 2;
         setSize(WIDTH + 37, HEIGHT);
-        setLocation(locationX, locationY);
+        setLocation((screenSize.width - WIDTH - 37) / 2, (screenSize.height - HEIGHT) / 2);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Binary Heap");
         panel = new JPanel();
@@ -213,7 +211,7 @@ public class Gui extends JFrame {
         });
     }
 
-    public void clear(){
+    private void clear(){
         setVisible(false);
         panel.removeAll();
         panel.add(addButton);
@@ -241,7 +239,7 @@ public class Gui extends JFrame {
         return 40 + 80 * getHeightOfRoot(currentIndex);
     }
 
-    public Line getLine(int currentIndex){
+    private Line getLine(int currentIndex){
         int x1 = (int) getPositionX(currentIndex) + 16;
         int x2 = (int) getPositionX(getParentIndex(currentIndex)) + 16;
         int y1 = getPositionY(currentIndex) + 32;

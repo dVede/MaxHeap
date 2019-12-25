@@ -177,7 +177,7 @@ public class HeapTest {
         maxHeap.add(519);
         maxHeap.add(52);
         maxHeap.add(195);
-        maxHeap.remove(14);;
+        maxHeap.remove(14);
         assertTrue(sortCheck(maxHeap));
     }
 

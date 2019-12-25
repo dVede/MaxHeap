@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 public class Heap<T extends Comparable<T>> implements Queue<T> {
 
     private ArrayList<T> heap;
-    boolean isMax;
+    public boolean isMax;
 
     public Heap() {
         this.isMax = true;
