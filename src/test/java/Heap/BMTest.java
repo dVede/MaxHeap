@@ -84,12 +84,12 @@ public class BMTest {
 
     @Benchmark
     public void arraySort50(BenchMarkState state) {
-        state.big1.sortedArray(state.array);
+        Heap.sortedArray(state.array);
     }
 
     @Benchmark
     public void arraySort3(BenchMarkState state) {
-        state.small1.sortedArray(state.array2);
+        Heap.sortedArray(state.array2);
     }
 
     @Benchmark

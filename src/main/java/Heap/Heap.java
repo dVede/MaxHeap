@@ -258,10 +258,10 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         }
     }
 
-    public void sortedArray(ArrayList<T> array) {
+    public static void sortedArray(ArrayList<Integer> array) {
         if (array.isEmpty())
             throw new NoSuchElementException();
-        Heap<T> heap = new Heap<>(array);
+        Heap<Integer> heap = new Heap<>(array);
         IntStream.range(0, array.size()).forEach(i -> array.set(i, heap.poll()));
     }
 

@@ -175,6 +175,7 @@ public class Gui extends JFrame {
         panel.add(pollButton);
 
         poll = new JTextField(5);
+        poll.setBorder(null);
         poll.setBounds(360, 500, 30, 25);
         poll.setEditable(false);
         panel.add(poll);
@@ -186,6 +187,7 @@ public class Gui extends JFrame {
         panel.add(directionButton);
 
         direction = new JTextField(3);
+        direction.setBorder(null);
         direction.setText("Max");
         direction.setBounds(160, 500, 30, 25);
         direction.setEditable(false);
@@ -239,9 +241,10 @@ public class Gui extends JFrame {
         return 40 + 80 * getHeightOfRoot(currentIndex);
     }
 
+    @NotNull
     private Line getLine(int currentIndex){
-        int x1 = (int) getPositionX(currentIndex) + 16;
-        int x2 = (int) getPositionX(getParentIndex(currentIndex)) + 16;
+        int x1 = (int) getPositionX(currentIndex) + 17;
+        int x2 = (int) getPositionX(getParentIndex(currentIndex)) + 17;
         int y1 = getPositionY(currentIndex) + 32;
         int y2 = getPositionY(getParentIndex(currentIndex)) + 57;
         return new Line(x1, y1, x2, y2);

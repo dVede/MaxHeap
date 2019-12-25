@@ -235,14 +235,14 @@ public class HeapTest {
         array.add(11);
         array.add(10);
         array.add(18);
-        maxHeap.sortedArray(array);
+        Heap.sortedArray(array);
         assertEquals(check, array);
     }
 
     @Test(expected = NoSuchElementException.class)
     public void sortedArrayNoSuchTest(){
         ArrayList<Integer> array = new ArrayList<>();
-        maxHeap.sortedArray(array);
+        Heap.sortedArray(array);
     }
 
     @Test
