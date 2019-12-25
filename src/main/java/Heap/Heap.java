@@ -7,18 +7,28 @@ import java.util.stream.IntStream;
 public class Heap<T extends Comparable<T>> implements Queue<T> {
 
     private ArrayList<T> heap;
-    MinMax minMax;
+    boolean isMax;
 
-    public Heap(MinMax minMax) {
-        this.minMax = minMax;
+    public Heap() {
+        this.isMax = true;
         this.heap = new ArrayList<>();
     }
 
-    public Heap(ArrayList<T> elem, MinMax minMax) {
-        this.minMax = minMax;
+    public Heap(ArrayList<T> elem) {
+        this.isMax = true;
         this.heap = new ArrayList<>(elem);
         for (int i = heap.size() / 2; i >= 0; i--)
             sort(i);
+    }
+
+    public void changeHeapDirection(){
+        isMax = !isMax;
+        for (int i = heap.size() / 2; i >= 0; i--)
+            sort(i);
+    }
+
+    public static int getHeightOfRoot(int x) {
+        return (int) Math.floor(log2(x + 1));
     }
 
     public int getHeight() {
@@ -114,26 +124,30 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         heap.add(item);
         int currentIndex = heap.size() - 1;
         int parentIndex = getParentIndex(currentIndex);
-        if (this.minMax == MinMax.MAX) {
-        while (currentIndex > 0 && heap.get(parentIndex).compareTo(heap.get(currentIndex)) < 0) {
-            swap(currentIndex, parentIndex);
-            currentIndex = parentIndex;
-            parentIndex = getParentIndex(currentIndex);
-        }
+        if (this.isMax) {
+            while (currentIndex > 0 && heap.get(parentIndex).compareTo(heap.get(currentIndex)) < 0) {
+                swap(currentIndex, parentIndex);
+                currentIndex = parentIndex;
+                parentIndex = getParentIndex(currentIndex);
+            }
         return true;
+        } else {
+            while (currentIndex > 0 && heap.get(parentIndex).compareTo(heap.get(currentIndex)) > 0) {
+                swap(currentIndex, parentIndex);
+                currentIndex = parentIndex;
+                parentIndex = getParentIndex(currentIndex);
+            }
+            return true;
         }
-        while (currentIndex > 0 && heap.get(parentIndex).compareTo(heap.get(currentIndex)) > 0) {
-        swap(currentIndex, parentIndex);
-        currentIndex = parentIndex;
-        parentIndex = getParentIndex(currentIndex);
-        }
-        return true;
     }
 
     @Override
     public boolean remove(Object o) {
-        if (heap.contains(o) && heap.remove(heap.indexOf(o)) != null) {
-            sort(0);
+        if (heap.contains(o)) {
+            swap(heap.indexOf(o), heap.size() - 1);
+            heap.remove(heap.size() - 1);
+            for (int i = heap.size() / 2; i >= 0; i--)
+                sort(i);
             return true;}
         return false;
     }
@@ -225,7 +239,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         while (currentIndex < heap.size()) {
             leftIndex = getLeftChildIndex(currentIndex);
             rightIndex = getRightChildIndex(currentIndex);
-            if (this.minMax == MinMax.MAX) {
+            if (this.isMax) {
                 if (leftIndex < heap.size() && heap.get(leftIndex).compareTo(heap.get(maxIndex)) > 0)
                     maxIndex = leftIndex;
                 if (rightIndex < heap.size() && heap.get(rightIndex).compareTo(heap.get(maxIndex)) > 0)
@@ -247,23 +261,23 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
     public void sortedArray(ArrayList<T> array) {
         if (array.isEmpty())
             throw new NoSuchElementException();
-        Heap<T> heap = new Heap<T>(array, this.minMax);
+        Heap<T> heap = new Heap<>(array);
         IntStream.range(0, array.size()).forEach(i -> array.set(i, heap.poll()));
     }
 
-    public Heap<T> merge(ArrayList<T> array){
+    public Heap<T> merge(ArrayList<T> array) {
         if (array.isEmpty())
             throw new NoSuchElementException();
         IntStream.range(0, this.size()).filter(i -> !array.contains(this.get(i)))
                 .forEach(i -> array.add(this.get(i)));
-        return new Heap<T>(array, this.minMax);
+        return new Heap<>(array);
     }
 
-    public static int getLeftChildIndex(int currentIndex){
+    public static int getLeftChildIndex(int currentIndex) {
         return 2 * currentIndex + 1;
     }
 
-    public static int getRightChildIndex(int currentIndex){
+    public static int getRightChildIndex(int currentIndex) {
         return 2 * currentIndex + 2;
     }
 

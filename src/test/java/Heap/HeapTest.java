@@ -10,11 +10,11 @@ import static org.junit.Assert.*;
 
 public class HeapTest {
 
-    private Heap<Integer> maxHeap = new Heap<Integer>(MinMax.MAX);
-    private Heap<Integer> newHeap = new Heap<Integer>(MinMax.MAX);
+    private Heap<Integer> maxHeap = new Heap<Integer>();
+    private Heap<Integer> newHeap = new Heap<Integer>();
 
     private <T extends Comparable<T>> boolean sortCheck(@NotNull Heap<T> heap) {
-        if (heap.minMax == MinMax.MAX)
+        if (heap.isMax)
             return IntStream.range(0, heap.size() / 2)
                     .noneMatch(i -> 2 * i + 1 < heap.size() && heap.get(i).compareTo(heap.get(2 * i + 1)) < 0
                             || 2 * i + 2 < heap.size() && heap.get(i).compareTo((heap.get(2 * i + 2))) < 0);
@@ -177,7 +177,7 @@ public class HeapTest {
         maxHeap.add(519);
         maxHeap.add(52);
         maxHeap.add(195);
-        maxHeap.remove(14);
+        maxHeap.remove(14);;
         assertTrue(sortCheck(maxHeap));
     }
 
@@ -305,8 +305,10 @@ public class HeapTest {
 
     @Test
     public void heapMinTest(){
-        Heap<Integer> minHeap = new Heap<Integer>(MinMax.MIN);
+        Heap<Integer> minHeap = new Heap<Integer>();
+        minHeap.changeHeapDirection();
         minHeap.addAll(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14, 17, 18));
+
         minHeap.add(1);
         assertTrue(sortCheck(minHeap));
         assertEquals((Integer) 1, minHeap.poll());
@@ -315,7 +317,29 @@ public class HeapTest {
     @Test
     public void heapCreateTest2(){
         ArrayList<Integer> array = new ArrayList<>(Arrays.asList(16, 15, 83, 49, 23, 24, 12, 14));
-        maxHeap = new Heap<Integer>(array, MinMax.MAX);
+        maxHeap = new Heap<>(array);
         assertTrue(sortCheck(maxHeap));
+    }
+
+    @Test
+    public void lineModel() {
+        Line line = new Line(15, 36 , 17 , 48);
+        assertEquals(15, line.getX1());
+        assertEquals(36, line.getY1());
+        assertEquals(17, line.getX2());
+        assertEquals(48, line.getY2());
+        line.setX1(1);
+        line.setY1(2);
+        line.setX2(3);
+        line.setY2(4);
+        assertEquals(1, line.getX1());
+        assertEquals(2, line.getY1());
+        assertEquals(3, line.getX2());
+        assertEquals(4, line.getY2());
+    }
+
+    @Test
+    public void GuiTest() {
+        Gui DisplayBST = new Gui();
     }
 }
