@@ -143,6 +143,8 @@ public class HeapTest {
         assertEquals((Integer) 14, iter.next());
         assertEquals((Integer) 12, iter.next());
         assertEquals((Integer) 8, iter.next());
+        iter.remove();
+        System.out.println(iter);
         assertEquals((Integer) 11, iter.next());
         assertEquals((Integer) 1, iter.next());
         assertFalse(iter.hasNext());
@@ -175,7 +177,7 @@ public class HeapTest {
 
     @Test
     public void removeTest() {
-        newHeap.addAll(Arrays.asList(255, 254, 25, 253, 252, 24, 23, 251, 250, 249, 248, 22, 21, 20, 19, 247))
+        newHeap.addAll(Arrays.asList(255, 254, 25, 253, 252, 24, 23, 251, 250, 249, 248, 22, 21, 20, 19, 247, 246, 245))
 ;        maxHeap.addAll(Arrays.asList(12, 11, 8, 14, 1));
         assertTrue(maxHeap.remove(11));
         assertFalse(maxHeap.remove(229));
@@ -189,9 +191,12 @@ public class HeapTest {
         maxHeap.add(195);
         maxHeap.remove(14);
         assertTrue(sortCheck(maxHeap));
-        System.out.println(newHeap.print());
         newHeap.remove(19);
-        assertTrue(sortCheck(maxHeap));
+        assertTrue(sortCheck(newHeap));
+        newHeap.remove(20);
+        assertTrue(sortCheck(newHeap));
+        newHeap.remove(255);
+        assertTrue(sortCheck(newHeap));
         System.out.println(newHeap.print());
     }
 

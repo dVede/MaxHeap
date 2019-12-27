@@ -82,7 +82,8 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
 
     private class MaxHeapIterator implements java.util.Iterator<T> {
         private ArrayList<T> heap;
-        private int index = -1;
+        private int last = -1;
+        private int index = 0;
 
         private MaxHeapIterator(ArrayList<T> heap) {
             this.heap = heap;
@@ -90,18 +91,30 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
 
         @Override
         public boolean hasNext() {
-            return index <= heap.size() - 2;
+            return index < heap.size();
         }
 
         @Override
         public T next() {
             if (!hasNext()) throw new NoSuchElementException();
-            index++;
-            return heap.get(index);
+            last = index++;
+            return heap.get(last);
         }
 
         @Override
-        public void remove() { throw new UnsupportedOperationException(); }
+        public void remove() {
+            heap.remove(index = last);
+            last = -1;
+        }
+
+        @Override
+        public String toString() {
+            return "MaxHeapIterator{" +
+                    "heap=" + heap +
+                    ", last=" + last +
+                    ", index=" + index +
+                    '}';
+        }
     }
 
     @Override
@@ -254,9 +267,8 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
             if (this.isMax) {
                 if (heap.get(parentIndex).compareTo(heap.get(maxIndex)) < 0)
                     maxIndex = parentIndex;
-                else if (heap.get(parentIndex).compareTo(heap.get(maxIndex)) < 0)
+            } else if (heap.get(parentIndex).compareTo(heap.get(maxIndex)) > 0)
                     maxIndex = parentIndex;
-            }
             if (maxIndex == currentIndex) break;
             swap(maxIndex, currentIndex);
             currentIndex = maxIndex;
@@ -286,10 +298,10 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         }
     }
 
-    public static void sortedArray(ArrayList<Integer> array) {
+    public static <T extends Comparable<T>> void sortedArray(ArrayList<T> array) {
         if (array.isEmpty())
             throw new NoSuchElementException();
-        Heap<Integer> heap = new Heap<>(array);
+        Heap<T> heap = new Heap<>(array);
         IntStream.range(0, array.size()).forEach(i -> array.set(i, heap.poll()));
     }
 
