@@ -112,7 +112,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
             return "MaxHeapIterator{" +
                     "heap=" + heap +
                     ", last=" + last +
-                    ", index=" + index +
+                    ", index=" + index + "/n" +
                     '}';
         }
     }
@@ -253,10 +253,11 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
 
     private void sort(int currentIndex) {
         if (currentIndex != 0) {
-            if (heap.get(currentIndex).compareTo(heap.get(getParentIndex(currentIndex))) > 0)
+            if (isMax && heap.get(currentIndex).compareTo(heap.get(getParentIndex(currentIndex))) > 0 )
                 sortUp(currentIndex);
-        }
-        else sortDown(currentIndex);
+            if (!isMax && heap.get(currentIndex).compareTo(heap.get(getParentIndex(currentIndex))) < 0 )
+                sortUp(currentIndex);
+        } else sortDown(currentIndex);
     }
 
     private void sortUp(int currentIndex) {
