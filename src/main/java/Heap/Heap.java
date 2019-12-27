@@ -253,9 +253,8 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
 
     private void sort(int currentIndex) {
         if (currentIndex != 0) {
-            if (isMax && heap.get(currentIndex).compareTo(heap.get(getParentIndex(currentIndex))) > 0 )
-                sortUp(currentIndex);
-            if (!isMax && heap.get(currentIndex).compareTo(heap.get(getParentIndex(currentIndex))) < 0 )
+            if (isMax && heap.get(currentIndex).compareTo(heap.get(getParentIndex(currentIndex))) > 0
+            || !isMax && heap.get(currentIndex).compareTo(heap.get(getParentIndex(currentIndex))) < 0)
                 sortUp(currentIndex);
         } else sortDown(currentIndex);
     }
