@@ -35,6 +35,15 @@ public class HeapTest {
     }
 
     @Test
+    public void retainAll() {
+        System.out.println(maxHeap.print());
+        maxHeap.addAll(Arrays.asList(12, 15, 8, 4, 23, 24, 12, 14));
+        System.out.println(maxHeap.print());
+        maxHeap.retainAll(Arrays.asList(8, 12, 4 , 15));
+        System.out.println(maxHeap.print());
+    }
+
+    @Test
     public void sizeTest() {
         assertEquals(0,  maxHeap.size());
         maxHeap.addAll(Arrays.asList(12, 15, 8, 4, 23, 24, 12, 14));
@@ -166,7 +175,8 @@ public class HeapTest {
 
     @Test
     public void removeTest() {
-        maxHeap.addAll(Arrays.asList(12, 11, 8, 14, 1));
+        newHeap.addAll(Arrays.asList(255, 254, 25, 253, 252, 24, 23, 251, 250, 249, 248, 22, 21, 20, 19, 247))
+;        maxHeap.addAll(Arrays.asList(12, 11, 8, 14, 1));
         assertTrue(maxHeap.remove(11));
         assertFalse(maxHeap.remove(229));
         assertFalse(maxHeap.remove(null));
@@ -179,6 +189,10 @@ public class HeapTest {
         maxHeap.add(195);
         maxHeap.remove(14);
         assertTrue(sortCheck(maxHeap));
+        System.out.println(newHeap.print());
+        newHeap.remove(19);
+        assertTrue(sortCheck(maxHeap));
+        System.out.println(newHeap.print());
     }
 
     @Test

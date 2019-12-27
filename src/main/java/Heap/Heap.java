@@ -18,13 +18,13 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         this.isMax = true;
         this.heap = new ArrayList<>(elem);
         for (int i = heap.size() / 2; i >= 0; i--)
-            sort(i);
+            sortDown(i);
     }
 
     public void changeHeapDirection(){
         isMax = !isMax;
         for (int i = heap.size() / 2; i >= 0; i--)
-            sort(i);
+            sortDown(i);
     }
 
     public static int getHeightOfRoot(int x) {
@@ -71,8 +71,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
             throw new IndexOutOfBoundsException();
         T oldValue = this.get(index);
         heap.set(index, value);
-        for (int i = heap.size() / 2; i >= 0; i--)
-            sort(i);
+        sort(index);
         return oldValue;
     }
 
@@ -141,14 +140,16 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         }
     }
 
+
     @Override
     public boolean remove(Object o) {
         if (heap.contains(o)) {
-            swap(heap.indexOf(o), heap.size() - 1);
+            int index = heap.indexOf(o);
+            swap(index, heap.size() - 1);
             heap.remove(heap.size() - 1);
-            for (int i = heap.size() / 2; i >= 0; i--)
-                sort(i);
-            return true;}
+            sort(index);
+            return true;
+        }
         return false;
     }
 
@@ -183,24 +184,27 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
+        if (heap.retainAll(c)) {
+            for (int i = heap.size() / 2; i >= 0; i--)
+                sortDown(i);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean offer(T t) {
-        if (t == null) throw new NullPointerException();
-        return add(t);
+        if (t != null)
+            return add(t);
+        throw new NullPointerException();
     }
 
     @Override
     public T remove() {
-        T result = heap.get(0);
-        if (result == null)
-            throw new NoSuchElementException();
-        heap.set(0, heap.get(heap.size() - 1));
-        heap.remove(heap.size() - 1);
-        sort(0);
-        return result;
+        T result = poll();
+        if (result != null)
+            return result;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -209,7 +213,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
             T result = heap.get(0);
             heap.set(0, heap.get(heap.size() - 1));
             heap.remove(heap.size() - 1);
-            sort(0);
+            sortDown(0);
             return result;
         }
         return null;
@@ -217,14 +221,15 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
 
     @Override
     public T element() {
-        if (!heap.isEmpty())
+        T result = peek();
+        if (result != null)
             return heap.get(0);
         throw new NoSuchElementException();
     }
 
     @Override
     public T peek() {
-        return heap.size() > 0 ? heap.get(0) : null;
+        return !heap.isEmpty() ? heap.get(0) : null;
     }
 
     private void swap(int currentIndex, int parentIndex) {
@@ -234,6 +239,31 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
     }
 
     private void sort(int currentIndex) {
+        if (currentIndex != 0) {
+            if (heap.get(currentIndex).compareTo(heap.get(getParentIndex(currentIndex))) > 0)
+                sortUp(currentIndex);
+        }
+        else sortDown(currentIndex);
+    }
+
+    private void sortUp(int currentIndex) {
+        int parentIndex;
+        int maxIndex = currentIndex;
+        while (currentIndex > 0) {
+            parentIndex = getParentIndex(maxIndex);
+            if (this.isMax) {
+                if (heap.get(parentIndex).compareTo(heap.get(maxIndex)) < 0)
+                    maxIndex = parentIndex;
+                else if (heap.get(parentIndex).compareTo(heap.get(maxIndex)) < 0)
+                    maxIndex = parentIndex;
+            }
+            if (maxIndex == currentIndex) break;
+            swap(maxIndex, currentIndex);
+            currentIndex = maxIndex;
+        }
+    }
+
+    private void sortDown(int currentIndex) {
         int maxIndex = currentIndex;
         int rightIndex, leftIndex;
         while (currentIndex < heap.size()) {
@@ -250,9 +280,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
                 if (rightIndex < heap.size() && heap.get(rightIndex).compareTo(heap.get(maxIndex)) < 0)
                     maxIndex = rightIndex;
             }
-            if (maxIndex == currentIndex) {
-                break;
-            }
+            if (maxIndex == currentIndex) break;
             swap(currentIndex, maxIndex);
             currentIndex = maxIndex;
         }
